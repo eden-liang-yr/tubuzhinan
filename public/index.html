@@ -1,0 +1,630 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>徒步指南 - 专业徒步线路推荐</title>
+    <script src="https://cdn.jsdelivr.net/npm/react@18.0.0/umd/react.development.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/react-dom@18.0.0/umd/react-dom.development.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@babel/standalone/babel.js"></script>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Montserrat:wght@400;600;700&display=swap" rel="stylesheet">
+    <style>
+        body {
+            font-family: 'Inter', sans-serif;
+            margin: 0;
+            padding: 0;
+            overflow-x: hidden;
+        }
+        .gradient-bg {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: -1;
+            opacity: 0.1;
+        }
+        .parallax-bg {
+            background-attachment: fixed;
+            background-position: center;
+            background-repeat: no-repeat;
+            background-size: cover;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: -2;
+            opacity: 0.15;
+            transition: background-image 0.5s ease-in-out;
+        }
+        .route-bg-1 {
+            background-image: url('https://picsum.photos/seed/huangshan/1920/1080.jpg');
+        }
+        .route-bg-2 {
+            background-image: url('https://picsum.photos/seed/wugongshan/1920/1080.jpg');
+        }
+        .route-bg-3 {
+            background-image: url('https://picsum.photos/seed/siguniangshan/1920/1080.jpg');
+        }
+        .route-bg-4 {
+            background-image: url('https://picsum.photos/seed/taihangshan/1920/1080.jpg');
+        }
+        .route-bg-5 {
+            background-image: url('https://picsum.photos/seed/yangshuo/1920/1080.jpg');
+        }
+        .route-bg-6 {
+            background-image: url('https://picsum.photos/seed/kunlunshan/1920/1080.jpg');
+        }
+        .route-bg-7 {
+            background-image: url('https://picsum.photos/seed/emeishan/1920/1080.jpg');
+        }
+        .route-bg-8 {
+            background-image: url('https://picsum.photos/seed/huangshan/1920/1080.jpg');
+        }
+        .glass-effect {
+            background: rgba(255, 255, 255, 0.9);
+            backdrop-filter: blur(10px);
+            -webkit-backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.3);
+        }
+        .floating {
+            animation: float 6s ease-in-out infinite;
+        }
+        @keyframes float {
+            0% { transform: translateY(0px); }
+            50% { transform: translateY(-20px); }
+            100% { transform: translateY(0px); }
+        }
+        .pulse {
+            animation: pulse 2s cubic-bezier(0.4, 0, 0.6, 1) infinite;
+        }
+        @keyframes pulse {
+            0%, 100% { opacity: 1; }
+            50% { opacity: .5; }
+        }
+    </style>
+</head>
+<body>
+    <div id="root"></div>
+
+    <script type="text/babel">
+        const { useState, useEffect } = React;
+
+        function App() {
+            const [selectedRoute, setSelectedRoute] = useState(null);
+            const [chatMessages, setChatMessages] = useState([
+                { type: 'bot', text: '你好！我是徒步指南助手。让我来帮你找到最适合的徒步线路。' }
+            ]);
+            const [userInput, setUserInput] = useState('');
+            const [currentBg, setCurrentBg] = useState('route-bg-1');
+
+            const hikingRoutes = [
+                {
+                    id: 1,
+                    name: '黄山云海徒步',
+                    level: '中阶',
+                    duration: '2-3天',
+                    difficulty: '中等',
+                    distance: '18公里',
+                    elevation: '1200米',
+                    rating: 4.8,
+                    reviews: 234,
+                    price: '800-1500元',
+                    features: ['日出云海', '奇松怪石', '文化历史'],
+                    equipment: ['登山鞋', '登山杖', '保暖衣物', '雨具'],
+                    transportation: '黄山北站/汤口镇',
+                    accommodation: '汤口镇酒店/山间客栈',
+                    description: '黄山是中国著名的山岳景区，以奇松、怪石、云海、温泉"四绝"闻名于世。这条线路适合有一定经验的徒步者，可以欣赏到壮丽的自然风光和丰富的文化底蕴。',
+                    tourLinks: {
+                        xiaohongshu: 'https://www.xiaohongshu.com/explore/603f8b8a0000000001002a3d',
+                        youxiake: 'https://www.youxiake.com/tour/123456',
+                        sanhaoren: 'https://www.sanhaoren.com/tour/789012'
+                    }
+                },
+                {
+                    id: 2,
+                    name: '武功山高山草甸',
+                    level: '新手',
+                    duration: '1-2天',
+                    difficulty: '简单',
+                    distance: '12公里',
+                    elevation: '800米',
+                    rating: 4.9,
+                    reviews: 189,
+                    price: '500-800元',
+                    features: ['高山草甸', '云中栈道', '星空露营'],
+                    equipment: ['舒适徒步鞋', '轻便背包', '防晒用品'],
+                    transportation: '萍乡北站/武功山游客中心',
+                    accommodation: '山间客栈/露营',
+                    description: '武功山位于江西，以壮丽的高山草甸和云中栈道闻名。线路相对平缓，适合新手和初级徒步者，沿途风景优美。',
+                    tourLinks: {
+                        xiaohongshu: 'https://www.xiaohongshu.com/explore/603f8b8a0000000001002a3e',
+                        youxiake: 'https://www.youxiake.com/tour/234567',
+                        sanhaoren: 'https://www.sanhaoren.com/tour/890123'
+                    }
+                },
+                {
+                    id: 3,
+                    name: '四姑娘山长坪沟',
+                    level: '高手',
+                    duration: '3-4天',
+                    difficulty: '困难',
+                    distance: '35公里',
+                    elevation: '2000米',
+                    rating: 4.7,
+                    reviews: 156,
+                    price: '1500-2500元',
+                    features: ['雪山冰川', '高原草甸', '原始森林'],
+                    equipment: ['专业登山装备', '高海拔装备', '保暖防风衣物'],
+                    transportation: '成都/小金县',
+                    accommodation: '专业登山营地',
+                    description: '四姑娘山是四川省著名的雪山景区，长坪沟线路难度较大，适合有经验的徒步者，可以近距离接触雪山和冰川。',
+                    tourLinks: {
+                        xiaohongshu: 'https://www.xiaohongshu.com/explore/603f8b8a0000000001002a3f',
+                        youxiake: 'https://www.youxiake.com/tour/345678',
+                        sanhaoren: 'https://www.sanhaoren.com/tour/901234'
+                    }
+                },
+                {
+                    id: 4,
+                    name: '太行山大峡谷',
+                    level: '中阶',
+                    duration: '2天',
+                    difficulty: '中等',
+                    distance: '25公里',
+                    elevation: '1500米',
+                    rating: 4.6,
+                    reviews: 123,
+                    price: '600-1000元',
+                    features: ['峡谷风光', '红色文化', '地质奇观'],
+                    equipment: ['登山鞋', '登山杖', '防晒用品'],
+                    transportation: '长治/林州',
+                    accommodation: '景区附近酒店/农家乐',
+                    description: '太行山大峡谷以雄奇险峻著称，拥有独特的地质景观和丰富的红色文化底蕴，适合中阶徒步者。',
+                    tourLinks: {
+                        xiaohongshu: 'https://www.xiaohongshu.com/explore/603f8b8a0000000001002a40',
+                        youxiake: 'https://www.youxiake.com/tour/456789',
+                        sanhaoren: 'https://www.sanhaoren.com/tour/012345'
+                    }
+                },
+                {
+                    id: 5,
+                    name: '阳朔漓江徒步',
+                    level: '新手',
+                    duration: '1天',
+                    difficulty: '简单',
+                    distance: '10公里',
+                    elevation: '300米',
+                    rating: 4.8,
+                    reviews: 167,
+                    price: '300-600元',
+                    features: ['漓江风光', '喀斯特地貌', '田园风光'],
+                    equipment: ['舒适徒步鞋', '防晒用品', '相机'],
+                    transportation: '桂林/阳朔',
+                    accommodation: '阳朔县城酒店/民宿',
+                    description: '阳朔漓江徒步线路轻松愉快，可以欣赏到典型的喀斯特地貌和田园风光，适合全家出游。',
+                    tourLinks: {
+                        xiaohongshu: 'https://www.xiaohongshu.com/explore/603f8b8a0000000001002a41',
+                        youxiake: 'https://www.youxiake.com/tour/567890',
+                        sanhaoren: 'https://www.sanhaoren.com/tour/123456'
+                    }
+                },
+                {
+                    id: 6,
+                    name: '昆仑山探险',
+                    level: '高手',
+                    duration: '5-7天',
+                    difficulty: '极难',
+                    distance: '80公里',
+                    elevation: '3500米',
+                    rating: 4.9,
+                    reviews: 89,
+                    price: '3000-5000元',
+                    features: ['雪山探险', '高原体验', '极限挑战'],
+                    equipment: ['专业登山装备', '高海拔装备', '卫星电话'],
+                    transportation: '格尔木/西宁',
+                    accommodation: '专业登山营地',
+                    description: '昆仑山是中国西部的重要山脉，这条线路是真正的极限挑战，适合经验丰富的徒步者。',
+                    tourLinks: {
+                        xiaohongshu: 'https://www.xiaohongshu.com/explore/603f8b8a0000000001002a42',
+                        youxiake: 'https://www.youxiake.com/tour/678901',
+                        sanhaoren: 'https://www.sanhaoren.com/tour/234567'
+                    }
+                },
+                {
+                    id: 7,
+                    name: '峨眉山金顶徒步',
+                    level: '中阶',
+                    duration: '2天',
+                    difficulty: '中等',
+                    distance: '30公里',
+                    elevation: '1800米',
+                    rating: 4.7,
+                    reviews: 145,
+                    price: '800-1200元',
+                    features: ['佛教文化', '云海佛光', '自然景观'],
+                    equipment: ['登山鞋', '登山杖', '保暖衣物'],
+                    transportation: '成都/峨眉山',
+                    accommodation: '金顶酒店/山间客栈',
+                    description: '峨眉山是中国四大佛教名山之一，金顶徒步线路既有挑战性又有丰富的文化体验。',
+                    tourLinks: {
+                        xiaohongshu: 'https://www.xiaohongshu.com/explore/603f8b8a0000000001002a43',
+                        youxiake: 'https://www.youxiake.com/tour/789012',
+                        sanhaoren: 'https://www.sanhaoren.com/tour/345678'
+                    }
+                },
+                {
+                    id: 8,
+                    name: '黄山经典徒步',
+                    level: '中阶',
+                    duration: '3天',
+                    difficulty: '中等',
+                    distance: '25公里',
+                    elevation: '1600米',
+                    rating: 4.8,
+                    reviews: 210,
+                    price: '1000-1800元',
+                    features: ['日出云海', '奇松怪石', '温泉体验'],
+                    equipment: ['登山鞋', '登山杖', '保暖衣物', '雨具'],
+                    transportation: '黄山北站/汤口镇',
+                    accommodation: '汤口镇酒店/山间客栈',
+                    description: '黄山经典徒步线路，包含天都峰、莲花峰等主要景点，体验完整的黄山风光。',
+                    tourLinks: {
+                        xiaohongshu: 'https://www.xiaohongshu.com/explore/603f8b8a0000000001002a44',
+                        youxiake: 'https://www.youxiake.com/tour/890123',
+                        sanhaoren: 'https://www.sanhaoren.com/tour/456789'
+                    }
+                }
+            ];
+
+            const bgClasses = [
+                'route-bg-1', 'route-bg-2', 'route-bg-3', 'route-bg-4',
+                'route-bg-5', 'route-bg-6', 'route-bg-7', 'route-bg-8'
+            ];
+
+            useEffect(() => {
+                if (selectedRoute) {
+                    const bgIndex = selectedRoute.id - 1;
+                    setCurrentBg(bgClasses[bgIndex % bgClasses.length]);
+                }
+            }, [selectedRoute]);
+
+            const handleSendMessage = () => {
+                if (!userInput.trim()) return;
+
+                const newUserMessage = { type: 'user', text: userInput };
+                setChatMessages(prev => [...prev, newUserMessage]);
+
+                // 智能推荐逻辑
+                let response = '';
+                let recommendedRoute = null;
+
+                if (userInput.includes('推荐') || userInput.includes('线路')) {
+                    response = '根据你的需求，我为你推荐以下热门线路：\n';
+                    hikingRoutes.slice(0, 3).forEach(route => {
+                        response += `- ${route.name}（${route.level}，${route.duration}）\n`;
+                    });
+                    response += '\n请告诉我你的徒步经验水平，我可以给出更精准的推荐。';
+                } else if (userInput.includes('新手') || userInput.includes('初级')) {
+                    recommendedRoute = hikingRoutes.find(r => r.level === '新手');
+                    response = `对于新手，我推荐${recommendedRoute.name}，难度适中，风景优美，非常适合第一次徒步。点击查看详情：`;
+                } else if (userInput.includes('中阶') || userInput.includes('中级')) {
+                    recommendedRoute = hikingRoutes.find(r => r.level === '中阶');
+                    response = `中阶徒步者可以选择${recommendedRoute.name}，既有挑战性又能欣赏到壮丽景色。点击查看详情：`;
+                } else if (userInput.includes('高手') || userInput.includes('高级')) {
+                    recommendedRoute = hikingRoutes.find(r => r.level === '高手');
+                    response = `高手推荐${recommendedRoute.name}，挑战雪山冰川，体验真正的户外探险。点击查看详情：`;
+                } else if (userInput.includes('黄山')) {
+                    recommendedRoute = hikingRoutes.find(r => r.name.includes('黄山'));
+                    response = `我为你找到了${recommendedRoute.name}的详细信息，点击查看详情：`;
+                } else if (userInput.includes('武功山')) {
+                    recommendedRoute = hikingRoutes.find(r => r.name.includes('武功山'));
+                    response = `我为你找到了${recommendedRoute.name}的详细信息，点击查看详情：`;
+                } else if (userInput.includes('四姑娘山')) {
+                    recommendedRoute = hikingRoutes.find(r => r.name.includes('四姑娘山'));
+                    response = `我为你找到了${recommendedRoute.name}的详细信息，点击查看详情：`;
+                } else {
+                    response = '我理解你的需求。请告诉我你的徒步经验水平（新手/中阶/高手），或者你想去哪个具体的地点，这样我可以为你推荐最合适的线路。';
+                }
+
+                setTimeout(() => {
+                    setChatMessages(prev => [...prev, { type: 'bot', text: response }]);
+                    if (recommendedRoute) {
+                        setSelectedRoute(recommendedRoute);
+                    }
+                }, 1000);
+
+                setUserInput('');
+            };
+
+            const handleRouteClick = (route) => {
+                setSelectedRoute(route);
+            };
+
+            const openTourLink = (platform, route) => {
+                window.open(route.tourLinks[platform], '_blank');
+            };
+
+            return (
+                <div className="flex h-screen relative">
+                    {/* 背景效果 */}
+                    <div className="gradient-bg"></div>
+                    <div className={`parallax-bg ${currentBg}`}></div>
+
+                    {/* 左侧主内容区 */}
+                    <div className="flex-1 flex flex-col">
+                        {/* 顶部导航栏 */}
+                        <header className="glass-effect shadow-lg border-b border-gray-200">
+                            <div className="px-6 py-4 flex items-center justify-between">
+                                <div className="flex items-center space-x-4">
+                                    <button className="p-2 rounded-lg hover:bg-gray-100 transition-colors">
+                                        <i className="fas fa-bars text-gray-600"></i>
+                                    </button>
+                                    <h1 className="text-2xl font-bold text-gray-800">徒步指南</h1>
+                                </div>
+                                <div className="flex items-center space-x-4">
+                                    <button className="px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors">
+                                        登录/注册
+                                    </button>
+                                </div>
+                            </div>
+                        </header>
+
+                        {/* 主内容 */}
+                        <main className="flex-1 overflow-y-auto p-6">
+                            {selectedRoute ? (
+                                // 线路详情页面
+                                <div className="max-w-4xl mx-auto">
+                                    <button
+                                        onClick={() => setSelectedRoute(null)}
+                                        className="mb-4 flex items-center text-blue-600 hover:text-blue-700"
+                                    >
+                                        <i className="fas fa-arrow-left mr-2"></i>
+                                        返回线路列表
+                                    </button>
+
+                                    <div className="glass-effect rounded-xl shadow-xl overflow-hidden">
+                                        <div className="relative h-64 bg-gradient-to-br from-blue-400 to-blue-600">
+                                            <div className="absolute inset-0 bg-black bg-opacity-30 flex items-center justify-center">
+                                                <h2 className="text-4xl font-bold text-white floating">{selectedRoute.name}</h2>
+                                            </div>
+                                        </div>
+
+                                        <div className="p-6">
+                                            <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mb-6">
+                                                <div className="bg-white rounded-lg p-3 shadow">
+                                                    <div className="flex items-center text-gray-600 mb-1">
+                                                        <i className="fas fa-map-marker-alt w-4 h-4 mr-2"></i>
+                                                        <span className="text-sm">难度</span>
+                                                    </div>
+                                                    <span className="font-semibold text-gray-800">{selectedRoute.difficulty}</span>
+                                                </div>
+                                                <div className="bg-white rounded-lg p-3 shadow">
+                                                    <div className="flex items-center text-gray-600 mb-1">
+                                                        <i className="fas fa-calendar w-4 h-4 mr-2"></i>
+                                                        <span className="text-sm">时长</span>
+                                                    </div>
+                                                    <span className="font-semibold text-gray-800">{selectedRoute.duration}</span>
+                                                </div>
+                                                <div className="bg-white rounded-lg p-3 shadow">
+                                                    <div className="flex items-center text-gray-600 mb-1">
+                                                        <i className="fas fa-dollar-sign w-4 h-4 mr-2"></i>
+                                                        <span className="text-sm">预算</span>
+                                                    </div>
+                                                    <span className="font-semibold text-gray-800">{selectedRoute.price}</span>
+                                                </div>
+                                                <div className="bg-white rounded-lg p-3 shadow">
+                                                    <div className="flex items-center text-gray-600 mb-1">
+                                                        <i className="fas fa-star w-4 h-4 mr-2"></i>
+                                                        <span className="text-sm">评分</span>
+                                                    </div>
+                                                    <span className="font-semibold text-gray-800">{selectedRoute.rating}</span>
+                                                </div>
+                                            </div>
+
+                                            <div className="space-y-6">
+                                                <div>
+                                                    <h3 className="text-lg font-semibold text-gray-800 mb-3">线路描述</h3>
+                                                    <p className="text-gray-600 leading-relaxed">{selectedRoute.description}</p>
+                                                </div>
+
+                                                <div>
+                                                    <h3 className="text-lg font-semibold text-gray-800 mb-3">特色亮点</h3>
+                                                    <div className="flex flex-wrap gap-2">
+                                                        {selectedRoute.features.map((feature, index) => (
+                                                            <span key={index} className="px-3 py-1 bg-blue-100 text-blue-700 rounded-full text-sm">
+                                                                {feature}
+                                                            </span>
+                                                        ))}
+                                                    </div>
+                                                </div>
+
+                                                <div>
+                                                    <h3 className="text-lg font-semibold text-gray-800 mb-3">装备建议</h3>
+                                                    <div className="bg-white rounded-lg p-4 shadow">
+                                                        <p className="text-gray-600">{selectedRoute.equipment.join('、')}</p>
+                                                    </div>
+                                                </div>
+
+                                                <div>
+                                                    <h3 className="text-lg font-semibold text-gray-800 mb-3">交通与住宿</h3>
+                                                    <div className="space-y-3">
+                                                        <div>
+                                                            <h4 className="font-medium text-gray-700">交通方式</h4>
+                                                            <p className="text-gray-600">{selectedRoute.transportation}</p>
+                                                        </div>
+                                                        <div>
+                                                            <h4 className="font-medium text-gray-700">住宿建议</h4>
+                                                            <p className="text-gray-600">{selectedRoute.accommodation}</p>
+                                                        </div>
+                                                    </div>
+                                                </div>
+
+                                                <div>
+                                                    <h3 className="text-lg font-semibold text-gray-800 mb-3">报团链接</h3>
+                                                    <div className="grid grid-cols-1 md:grid-cols-3 gap-3">
+                                                        <button
+                                                            onClick={() => openTourLink('xiaohongshu', selectedRoute)}
+                                                            className="px-4 py-2 bg-pink-500 text-white rounded-lg hover:bg-pink-600 transition-colors flex items-center justify-center"
+                                                        >
+                                                            <i className="fab fa-instagram mr-2"></i>
+                                                            小红书
+                                                        </button>
+                                                        <button
+                                                            onClick={() => openTourLink('youxiake', selectedRoute)}
+                                                            className="px-4 py-2 bg-blue-500 text-white rounded-lg hover:bg-blue-600 transition-colors flex items-center justify-center"
+                                                        >
+                                                            <i className="fas fa-hiking mr-2"></i>
+                                                            游侠客
+                                                        </button>
+                                                        <button
+                                                            onClick={() => openTourLink('sanhaoren', selectedRoute)}
+                                                            className="px-4 py-2 bg-green-500 text-white rounded-lg hover:bg-green-600 transition-colors flex items-center justify-center"
+                                                        >
+                                                            <i className="fas fa-users mr-2"></i>
+                                                            稻草人
+                                                        </button>
+                                                    </div>
+                                                </div>
+
+                                                <div className="flex space-x-4">
+                                                    <button className="flex-1 px-6 py-3 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors flex items-center justify-center">
+                                                        <i className="fas fa-comments w-5 h-5 mr-2"></i>
+                                                        咨询详情
+                                                    </button>
+                                                    <button className="px-6 py-3 border border-gray-300 text-gray-700 rounded-lg hover:bg-gray-50 transition-colors flex items-center justify-center">
+                                                        <i className="fas fa-share w-5 h-5 mr-2"></i>
+                                                        分享线路
+                                                    </button>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            ) : (
+                                // 线路列表页面
+                                <div className="max-w-6xl mx-auto">
+                                    <div className="mb-8">
+                                        <h2 className="text-3xl font-bold text-gray-800 mb-2">热门徒步线路</h2>
+                                        <p className="text-gray-600">发现最适合你的徒步体验</p>
+                                    </div>
+
+                                    <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                                        {hikingRoutes.map((route) => (
+                                            <div
+                                                key={route.id}
+                                                className="glass-effect rounded-xl shadow-xl overflow-hidden cursor-pointer hover:shadow-2xl transition-all duration-300 transform hover:-translate-y-1"
+                                                onClick={() => handleRouteClick(route)}
+                                            >
+                                                <div className="h-48 bg-gradient-to-br from-blue-400 to-blue-600 relative overflow-hidden">
+                                                    <div className="absolute inset-0 bg-black bg-opacity-30 flex items-center justify-center">
+                                                        <h3 className="text-2xl font-bold text-white">{route.name}</h3>
+                                                    </div>
+                                                    <div className="absolute top-4 right-4">
+                                                        <span className="px-3 py-1 bg-white bg-opacity-90 text-blue-700 rounded-full text-sm font-medium">
+                                                            {route.level}
+                                                        </span>
+                                                    </div>
+                                                </div>
+
+                                                <div className="p-6">
+                                                    <div className="flex items-center justify-between mb-3">
+                                                        <div className="flex items-center">
+                                                            <i className="fas fa-star text-yellow-500 mr-1"></i>
+                                                            <span className="text-sm font-medium">{route.rating}</span>
+                                                            <span className="ml-1 text-xs text-gray-500">({route.reviews})</span>
+                                                        </div>
+                                                    </div>
+
+                                                    <div className="space-y-2 mb-4">
+                                                        <div className="flex items-center text-sm text-gray-600">
+                                                            <i className="fas fa-calendar w-4 h-4 mr-2"></i>
+                                                            <span>{route.duration}</span>
+                                                        </div>
+                                                        <div className="flex items-center text-sm text-gray-600">
+                                                            <i className="fas fa-map-marker-alt w-4 h-4 mr-2"></i>
+                                                            <span>{route.distance} • {route.elevation}海拔</span>
+                                                        </div>
+                                                        <div className="flex items-center text-sm text-gray-600">
+                                                            <i className="fas fa-dollar-sign w-4 h-4 mr-2"></i>
+                                                            <span>{route.price}</span>
+                                                        </div>
+                                                    </div>
+
+                                                    <div className="flex flex-wrap gap-2 mb-4">
+                                                        {route.features.slice(0, 2).map((feature, index) => (
+                                                            <span key={index} className="px-2 py-1 bg-gray-100 text-gray-700 rounded text-xs">
+                                                                {feature}
+                                                            </span>
+                                                        ))}
+                                                    </div>
+
+                                                    <button className="w-full px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors text-sm font-medium">
+                                                        查看详情
+                                                    </button>
+                                                </div>
+                                            </div>
+                                        ))}
+                                    </div>
+                                </div>
+                            )}
+                        </main>
+                    </div>
+
+                    {/* 右侧聊天栏 */}
+                    <div className="w-96 glass-effect border-l border-gray-200 flex flex-col">
+                        <div className="p-4 border-b border-gray-200">
+                            <h3 className="text-lg font-semibold text-gray-800">徒步助手</h3>
+                            <p className="text-sm text-gray-600">实时咨询与推荐</p>
+                        </div>
+
+                        <div className="flex-1 overflow-y-auto p-4 space-y-4">
+                            {chatMessages.map((message, index) => (
+                                <div
+                                    key={index}
+                                    className={`flex ${message.type === 'user' ? 'justify-end' : 'justify-start'}`}
+                                >
+                                    <div
+                                        className={`max-w-xs px-4 py-2 rounded-lg ${
+                                            message.type === 'user'
+                                                ? 'bg-blue-600 text-white'
+                                                : 'bg-gray-100 text-gray-800'
+                                        }`}
+                                    >
+                                        <p className="text-sm">{message.text}</p>
+                                    </div>
+                                </div>
+                            ))}
+                        </div>
+
+                        <div className="p-4 border-t border-gray-200">
+                            <div className="flex space-x-2">
+                                <input
+                                    type="text"
+                                    value={userInput}
+                                    onChange={(e) => setUserInput(e.target.value)}
+                                    onKeyPress={(e) => e.key === 'Enter' && handleSendMessage()}
+                                    placeholder="输入你的问题..."
+                                    className="flex-1 px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+                                />
+                                <button
+                                    onClick={handleSendMessage}
+                                    className="px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors"
+                                >
+                                    发送
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            );
+        }
+
+        ReactDOM.render(<App />, document.getElementById('root'));
+    </script>
+</body>
+</html>
