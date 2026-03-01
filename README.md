@@ -1,16 +1,57 @@
-# React + Vite
+# 徒步指南网站
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+一个专业的徒步线路推荐网站，帮助徒步爱好者找到最适合的线路，并提供详细的装备建议、交通住宿信息和报团链接。
 
-Currently, two official plugins are available:
+## 功能特点
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Babel](https://babeljs.io/) (or [oxc](https://oxc.rs) when used in [rolldown-vite](https://vite.dev/guide/rolldown)) for Fast Refresh
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
+- 🏔️ **丰富的徒步线路**：包含黄山、武功山、四姑娘山等8条热门线路
+- 📱 **智能推荐系统**：根据用户经验水平推荐合适的线路
+- 💬 **实时聊天助手**：智能问答系统，提供线路推荐
+- 🌄 **精美设计**：自然风景背景，玻璃态效果，响应式设计
+- 🔗 **报团链接**：直接跳转到小红书、游侠客、稻草人等旅游网站
 
-## React Compiler
+## 技术栈
 
-The React Compiler is not enabled on this template because of its impact on dev & build performances. To add it, see [this documentation](https://react.dev/learn/react-compiler/installation).
+- React 18
+- Tailwind CSS
+- Font Awesome
+- Google Fonts
+- GitHub Pages
 
-## Expanding the ESLint configuration
+## 部署指南
 
-If you are developing a production application, we recommend using TypeScript with type-aware lint rules enabled. Check out the [TS template](https://github.com/vitejs/vite/tree/main/packages/create-vite/template-react-ts) for information on how to integrate TypeScript and [`typescript-eslint`](https://typescript-eslint.io) in your project.
+### 1. 创建GitHub仓库
+1. 在GitHub上创建一个新的公开仓库
+2. 将本地仓库推送到GitHub
+
+```bash
+git remote add origin https://github.com/你的用户名/徒步指南.git
+git branch -M main
+git push -u origin main
+```
+
+### 2. 配置GitHub Pages
+1. 进入仓库设置
+2. 找到"Pages"选项
+3. 选择"main"分支
+4. 保存设置
+
+### 3. 访问网站
+部署完成后，你的网站将通过 `https://你的用户名.github.io/徒步指南/` 访问
+
+## 使用方法
+
+1. 在右侧聊天栏输入你的问题，如"推荐线路"、"新手推荐"等
+2. 系统会根据你的输入推荐合适的线路
+3. 点击线路卡片查看详细信息
+4. 在线路详情页可以查看报团链接并跳转到旅游网站
+
+## 联系方式
+
+如有问题或建议，请通过以下方式联系：
+- 邮箱：example@email.com
+- GitHub Issues
+
+## 许可证
+
+MIT License
